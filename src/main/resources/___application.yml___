@@ -1,0 +1,64 @@
+server:
+   port: 8200
+   host: 127.0.0.1
+   public:
+      host: public.server.com
+
+spring:
+   application:
+      name: kafka-notify-service
+
+logging:
+   level:
+      com.chihuo.notify: debug
+
+eureka:
+   client:
+      service-url:
+         defaultZone: http://eureka-server01.com:7001/eureka,http://eureka-server02.com:7002/eureka
+   instance:
+      hostname: ${spring.cloud.client.ip-address}
+      prefer-ip-address: true      #以IP地址注册到服务中心
+      instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}:$project.version$      #eureka显示的instanceId
+      ip-address: ${server.public.host}      #公网ip，如果是服务内网调用不需要声明这个
+      non-secure-port: ${server.port}      #公网端口，如果是服务内网调用不需要声明这个
+      lease-expiration-duration-in-seconds: 15      #服务过期时间配置,超过这个时间没有接收到心跳EurekaServer就会将这个实例剔除
+      lease-renewal-interval-in-seconds: 5      #服务刷新时间配置，每隔这个时间会主动心跳一次
+   healthcheck:
+      enabled: true # 启用健康检查,注意:需要引用spring boot actuator
+info:
+   app:
+      name: $project.artifactId$
+      encoding: $project.build.sourceEncoding$
+   company:
+      name: $project.description$
+   build:
+      artifactId: $project.artifactId$
+      version: $project.version$
+
+#============== kafka ===================
+kafka:
+   consumer:
+      servers: 47.115.34.118:9092
+      enable:
+         auto:
+            commit: true
+      session:
+         timeout: 6000
+      auto:
+         commit:
+            interval: 100
+         offset:
+            reset: earliest
+      topic: food
+      group:
+         id: food-group
+      concurrency: 10
+   producer:
+      servers: 47.115.34.118:9092
+      retries: 0
+   batch:
+      size: 4096
+   linger: 1
+   buffer:
+      memory: 40960
