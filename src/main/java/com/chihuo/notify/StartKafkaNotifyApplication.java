@@ -11,8 +11,8 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
 @EnableEurekaClient // 表示是eureka的客户端
 @EnableDiscoveryClient
-public class StartApplication {
+public class StartKafkaNotifyApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(StartApplication.class, args);
+		SpringApplication.run(StartKafkaNotifyApplication.class, args);
 	}
 }
